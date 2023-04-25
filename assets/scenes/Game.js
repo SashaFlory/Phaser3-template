@@ -1,4 +1,4 @@
-import { PLAYER_MOVEMENTS } from "../../utils.js";
+import { PLAYER_MOVEMENTS, SHAPE_DELAY, SHAPES, TRIANGULO, CUADRADO, ROMBO } from "../../utils.js";
 export default class Game extends Phaser.Scene {
     constructor() {
       super("Game");
@@ -18,7 +18,9 @@ export default class Game extends Phaser.Scene {
       this.load.image("sky", "./assets/images/Cielo.png");
       this.load.image("platform", "./assets/images/platform.png");
       this.load.image("player", "./assets/images/Ninja.png");
-      this.load.image("triangle", "./assets/images/Triangulo.png");
+      this.load.image(TRIANGULO, "./assets/images/Triangulo.png");
+      this.load.image(CUADRADO, "./assets/images/Cuadrado.png");
+      this.load.image(ROMBO, "./assets/images/Rombo.png");
     }
   
     create() {
@@ -36,9 +38,8 @@ export default class Game extends Phaser.Scene {
         .refreshBody();
       //o en la misma linea como:  this.platforms.create(400, 580, "platform").setScale(2).refreshBody();
       
-      //grupo de formas que no estatico
+      //grupo de formas no estatico
       this.shapesGroup = this.physics.add.group();
-      this.shapesGroup.create(100, 0, "triangle");
 
       //agrega colision entre personaje y plataforma, y entre formas y plataforma
       this.physics.add.collider(this.player, this.platformsGroup);
@@ -51,6 +52,14 @@ export default class Game extends Phaser.Scene {
       
       //create cursors - se crean los inputs en teclado
       this.cursors = this.input.keyboard.createCursorKeys();
+
+      //create event to add shapes - crea un evento para que las formas caigan cada cierto tiempo
+      this.time.addEvent({
+        delay: SHAPE_DELAY,
+        callback: this.addShape,
+        callbackScope: this,
+        loop: true,
+      });
 
     }
   
@@ -76,5 +85,20 @@ export default class Game extends Phaser.Scene {
       console.log("figura recolectada");
       figuraChocada.disableBody(true, true);
     }
+
+    addShape() {
+      //get random shape
+      const randomShape = Phaser.Math.RND.pick(SHAPES);
+
+      //get random position
+      const randomX = Phaser.Math.RND.between(0,800);
+
+      //add shape to screen
+      this.shapesGroup.create(randomX, 0, randomShape);
+
+      console.log("Shape is added", randomX, randomShape);
+    }
+
+
   }
   
