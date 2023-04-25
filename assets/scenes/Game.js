@@ -1,3 +1,4 @@
+import { PLAYER_MOVEMENTS } from "../../utils.js";
 export default class Game extends Phaser.Scene {
     constructor() {
       super("Game");
@@ -39,17 +40,37 @@ export default class Game extends Phaser.Scene {
       this.shapesGroup = this.physics.add.group();
       this.shapesGroup.create(100, 0, "triangle");
 
-      //agrega colision entre personaje y plataforma
+      //agrega colision entre personaje y plataforma, y entre formas y plataforma
       this.physics.add.collider(this.player, this.platformsGroup);
+
       this.physics.add.collider(this.shapesGroup, this.platformsGroup);
 
       //agregar overlap entre player y formas
       this.physics.add.overlap(this.player, this.shapesGroup, this.collectShape, null, this);
       //null y this quedan fijos por ahora
       
+      //create cursors - se crean los inputs en teclado
+      this.cursors = this.input.keyboard.createCursorKeys();
+
     }
   
-    update() {}
+    update() {
+
+      //update player left right movement - establece que pasa cuando se apreta cada tecla
+      if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-PLAYER_MOVEMENTS.x);
+      } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(PLAYER_MOVEMENTS.x);
+      } else {
+        this.player.setVelocityX(0);
+      };
+
+      //update player jump
+      if (this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.setVelocityY(-PLAYER_MOVEMENTS.y);
+      };
+
+    }
 
     collectShape(jugador, figuraChocada) {
       console.log("figura recolectada");
