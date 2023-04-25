@@ -6,11 +6,11 @@ export default class Game extends Phaser.Scene {
   
     init() {
       //inicializar variables
-      let shapesRecolected = [
-        {type: "Triangulo", count: 0},
-        {type: "Cuadrado", count: 0},
-        {type: "Rombo", count: 0}
-      ];
+      this.shapesRecolected = {
+        ["Triangulo"]: { count: 0},
+        ["Cuadrado"]: { count: 0},
+        ["Rombo"]: {count: 0}
+      };
     };
   
     preload() {
@@ -84,6 +84,11 @@ export default class Game extends Phaser.Scene {
     collectShape(jugador, figuraChocada) {
       console.log("figura recolectada");
       figuraChocada.disableBody(true, true);
+
+      const shapeName = figuraChocada.texture.key;
+      this.shapesRecolected[shapeName].count++;
+
+      console.log(this.shapesRecolected);
     }
 
     addShape() {
