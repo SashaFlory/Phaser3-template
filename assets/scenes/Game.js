@@ -6,6 +6,7 @@ import {
   CUADRADO,
   ROMBO,
 } from "../../utils.js";
+
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
@@ -14,10 +15,13 @@ export default class Game extends Phaser.Scene {
   init() {
     //inicializar variables
     this.shapesRecolected = {
-      ["Triangulo"]: { count: 0 },
-      ["Cuadrado"]: { count: 0 },
-      ["Rombo"]: { count: 0 },
+      [TRIANGULO]: { count: 0 },
+      [CUADRADO]: { count: 0 },
+      [ROMBO]: { count: 0 },
     };
+
+    this.isWinner = false;
+    this.isGameOver = false;
   }
 
   preload() {
@@ -71,6 +75,7 @@ export default class Game extends Phaser.Scene {
       loop: true,
     });
 
+    //agrega texto en pantalla de puntaje
     this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0", {
       fontSize: "20px",
       fill: "#1af",
@@ -78,6 +83,15 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
+    //check if win or gameover
+    if (this.isWinner) {
+      this.scene.start("Winner");
+    }
+
+    if (this.isGameOver) {
+      this.scene.start("GameOver");
+    }
+
     //update player left right movement - establece que pasa cuando se apreta cada tecla
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-PLAYER_MOVEMENTS.x);
@@ -100,7 +114,25 @@ export default class Game extends Phaser.Scene {
     const shapeName = figuraChocada.texture.key;
     this.shapesRecolected[shapeName].count++;
 
+    //update score text
+    this.scoreText.setText(
+      "T: " +
+        this.shapesRecolected[TRIANGULO].count +
+        " / C: " +
+        this.shapesRecolected[CUADRADO].count +
+        " / R: " +
+        this.shapesRecolected[ROMBO].count
+    );
+
     console.log(this.shapesRecolected);
+
+    if (
+      this.shapesRecolected[TRIANGULO].count >= 2 &&
+      this.shapesRecolected[CUADRADO].count >= 2 &&
+      this.shapesRecolected[ROMBO].count >= 2
+    ) {
+      this.isWinner = true;
+    }
   }
 
   addShape() {
