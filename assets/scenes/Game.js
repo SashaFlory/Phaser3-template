@@ -1,6 +1,7 @@
 import {
   PLAYER_MOVEMENTS,
   SHAPE_DELAY,
+  TIMER_DELAY,
   SHAPES,
   TRIANGULO,
   CUADRADO,
@@ -22,6 +23,8 @@ export default class Game extends Phaser.Scene {
 
     this.isWinner = false;
     this.isGameOver = false;
+
+    this.timer = 30;
   }
 
   preload() {
@@ -75,8 +78,21 @@ export default class Game extends Phaser.Scene {
       loop: true,
     });
 
+    //agrego evento de contador
+    this.time.addEvent({
+      delay: TIMER_DELAY,
+      callback: this.updateTimer,
+      callbackScope: this,
+      loop: true,
+    });
+
     //agrega texto en pantalla de puntaje
     this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0", {
+      fontSize: "20px",
+      fill: "#1af",
+    });
+
+    this.timerText = this.add.text(400, 16, "Tiempo: 30", {
       fontSize: "20px",
       fill: "#1af",
     });
@@ -146,5 +162,15 @@ export default class Game extends Phaser.Scene {
     this.shapesGroup.create(randomX, 0, randomShape);
 
     console.log("Shape is added", randomX, randomShape);
+  }
+
+  updateTimer() {
+    this.timer--;
+    this.timerText.setText("Tiempo: " + this.timer);
+    console.log(this.timer);
+
+    if (this.timer == 0) {
+      this.isGameOver = true;
+    }
   }
 }
