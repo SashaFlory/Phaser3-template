@@ -47,6 +47,8 @@ export default class Game extends Phaser.Scene {
     //plataform static group o grupo estático
     this.platformsGroup = this.physics.add.staticGroup();
     this.platformsGroup.create(400, 580, "platform").setScale(2).refreshBody();
+    this.platformsGroup.create(650, 420, "platform").setScale(0.5).refreshBody();
+    this.platformsGroup.create(100, 320, "platform").setScale(0.4).refreshBody();
     //o en la misma linea como:  this.platforms.create(400, 580, "platform").setScale(2).refreshBody();
 
     //grupo de formas no estatico
