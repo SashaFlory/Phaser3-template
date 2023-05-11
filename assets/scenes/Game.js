@@ -6,6 +6,7 @@ import {
   TRIANGULO,
   CUADRADO,
   ROMBO,
+  ESTRELLA
 } from "../../utils.js";
 
 export default class Game extends Phaser.Scene {
@@ -16,15 +17,17 @@ export default class Game extends Phaser.Scene {
   init() {
     //inicializar variables
     this.shapesRecolected = {
-      [TRIANGULO]: { count: 0 },
-      [CUADRADO]: { count: 0 },
-      [ROMBO]: { count: 0 },
+      [TRIANGULO]: { count: 0, score: 10 },
+      [CUADRADO]: { count: 0, score: 20 },
+      [ROMBO]: { count: 0, score: 30 },
+      [ESTRELLA]: {count: 0, score: -40}
     };
 
     this.isWinner = false;
     this.isGameOver = false;
 
     this.timer = 30;
+    this.totalScore = 0;
   }
 
   preload() {
@@ -35,6 +38,7 @@ export default class Game extends Phaser.Scene {
     this.load.image(TRIANGULO, "./assets/images/Triangulo.png");
     this.load.image(CUADRADO, "./assets/images/Cuadrado.png");
     this.load.image(ROMBO, "./assets/images/Rombo.png");
+    this.load.image(ESTRELLA, "./assets/images/Estrella.png");
   }
 
   create() {
@@ -89,10 +93,15 @@ export default class Game extends Phaser.Scene {
     });
 
     //agrega texto en pantalla de puntaje
-    this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0", {
+    this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0 / E: 0", {
       fontSize: "20px",
       fill: "#1af",
     });
+
+    this.totalScoreText = this.add.text(16, 50, "SCORE: 0", {
+      fontSize: "20px",
+      fill: "#1af",
+    })
 
     this.timerText = this.add.text(400, 16, "Tiempo: 30", {
       fontSize: "20px",
@@ -126,11 +135,12 @@ export default class Game extends Phaser.Scene {
   }
 
   collectShape(jugador, figuraChocada) {
-    console.log("figura recolectada");
     figuraChocada.disableBody(true, true);
 
     const shapeName = figuraChocada.texture.key;
     this.shapesRecolected[shapeName].count++;
+
+    this.totalScore = this.totalScore + this.shapesRecolected[shapeName].score;
 
     //update score text
     this.scoreText.setText(
@@ -139,18 +149,31 @@ export default class Game extends Phaser.Scene {
         " / C: " +
         this.shapesRecolected[CUADRADO].count +
         " / R: " +
-        this.shapesRecolected[ROMBO].count
+        this.shapesRecolected[ROMBO].count +
+        " / E: " +
+        this.shapesRecolected[ESTRELLA].count
     );
 
-    console.log(this.shapesRecolected);
+    this.totalScoreText.setText(
+      "SCORE: " +
+      this.totalScore
+    )
 
-    if (
-      this.shapesRecolected[TRIANGULO].count >= 2 &&
-      this.shapesRecolected[CUADRADO].count >= 2 &&
-      this.shapesRecolected[ROMBO].count >= 2
-    ) {
+    console.log("Figura recolectada ---> Puntos:" + this.shapesRecolected[shapeName].score);
+    console.log("Puntos totales:", this.totalScore);
+
+    if (this.totalScore >= 100) {
       this.isWinner = true;
-    }
+    };
+
+    // if (
+    //   this.shapesRecolected[TRIANGULO].count >= 2 &&
+    //   this.shapesRecolected[CUADRADO].count >= 2 &&
+    //   this.shapesRecolected[ROMBO].count >= 2
+    // ) {
+    //   this.isWinner = true;
+    // }
+
   }
 
   addShape() {
