@@ -1,5 +1,3 @@
-# Phaser 3 Template
+# Trabajo Práctico N°1
 
-Plantilla para iniciar nuevos proyectos con PHASER 3.
-
-Contiene configuración inicial y buenas prácticas de estructuras de carpetas.
+Juego en GitHub Pages: https://sashaflory.github.io/Phaser3-template/
