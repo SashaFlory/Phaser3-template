@@ -6,7 +6,9 @@ import {
   TRIANGULO,
   CUADRADO,
   ROMBO,
-  ESTRELLA
+  ESTRELLA,
+  POINTS_PERCENTAGE,
+  POINTS_PERCENTAGE_VALUE_START
 } from "../../utils.js";
 
 export default class Game extends Phaser.Scene {
@@ -60,7 +62,6 @@ export default class Game extends Phaser.Scene {
 
     //agrega colision entre personaje y plataforma, y entre formas y plataforma
     this.physics.add.collider(this.player, this.platformsGroup);
-
     this.physics.add.collider(this.shapesGroup, this.platformsGroup);
 
     //agregar overlap entre player y formas
@@ -71,7 +72,14 @@ export default class Game extends Phaser.Scene {
       null,
       this
     );
-    //null y this quedan fijos por ahora
+
+    this.physics.add.overlap(
+      this.shapesGroup,
+      this.platformsGroup,
+      this.reduce,
+      null,
+      this
+    );
 
     //create cursors - se crean los inputs en teclado
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -140,7 +148,9 @@ export default class Game extends Phaser.Scene {
     const shapeName = figuraChocada.texture.key;
     this.shapesRecolected[shapeName].count++;
 
-    this.totalScore = this.totalScore + this.shapesRecolected[shapeName].score;
+    const percentage = figuraChocada.getData(POINTS_PERCENTAGE);
+
+    this.totalScore = this.totalScore + this.shapesRecolected[shapeName].score * percentage;
 
     //update score text
     this.scoreText.setText(
@@ -184,7 +194,10 @@ export default class Game extends Phaser.Scene {
     const randomX = Phaser.Math.RND.between(0, 800);
 
     //add shape to screen
-    this.shapesGroup.create(randomX, 0, randomShape);
+    this.shapesGroup.create(randomX, 0, randomShape)
+    .setCircle(32, 0, 0)
+    .setBounce(0.8)
+    .setData(POINTS_PERCENTAGE, POINTS_PERCENTAGE_VALUE_START);
 
     console.log("Shape is added", randomX, randomShape);
   }
@@ -197,5 +210,29 @@ export default class Game extends Phaser.Scene {
     if (this.timer == 0) {
       this.isGameOver = true;
     }
+  }
+
+  reduce(shape, platform) {
+    const newPercentage = shape.getData(POINTS_PERCENTAGE) - 0.25;
+
+    console.log(shape.texture.key, newPercentage);
+
+    shape.setData(POINTS_PERCENTAGE, newPercentage);
+
+    if (newPercentage <= 0) {
+      shape.disableBody(true, true);
+      return;
+    }
+
+    // show text
+    const text = this.add.text(shape.body.position.x+10, shape.body.position.y, "- 25%", {
+      fontSize: "22px",
+      fontStyle: "bold",
+      fill: "red",
+    });
+
+    setTimeout(() => {
+      text.destroy();
+    }, 200)
   }
 }

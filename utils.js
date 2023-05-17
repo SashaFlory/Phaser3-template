@@ -14,6 +14,9 @@ const CUADRADO = "Cuadrado";
 const ROMBO = "Rombo";
 const ESTRELLA = "Estrella";
 
+const POINTS_PERCENTAGE = "value";
+const POINTS_PERCENTAGE_VALUE_START = 1;
+
 const SHAPES = [TRIANGULO, CUADRADO, ROMBO, ESTRELLA];
 
 export {
@@ -24,5 +27,7 @@ export {
   TRIANGULO,
   CUADRADO,
   ROMBO,
-  ESTRELLA
+  ESTRELLA,
+  POINTS_PERCENTAGE,
+  POINTS_PERCENTAGE_VALUE_START
 };
