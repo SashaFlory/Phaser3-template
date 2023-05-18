@@ -7,14 +7,28 @@ export default class Winner extends Phaser.Scene {
 
   preload() {
     this.load.image("gato", "./assets/images/win.png");
+    this.load.image("botonMenu", "./assets/images/botonMenu.png");
+    this.load.image("botonP", "./assets/images/botonMenu-presionado.png");
   }
 
   create() {
-    this.add.image(400, 250, "gato").setScale(0.55);
-    this.add.text(300, 500, "You win", {
-      fontSize: "30px",
-      fill: "#1af",
-    });
+    this.add.image(400, 250, "gato").setScale(0.5);
+   
+    let MenuButton = this.add.image(400, 530, "botonMenu").setInteractive();
+
+    MenuButton.on("pointerover", () => {
+      MenuButton.setTexture("botonP");
+      })
+
+    MenuButton.on("pointerdown", () => {
+      MenuButton.setTexture("botonP");
+      this.scene.start("MainMenu");
+      })
+
+    MenuButton.on("pointerout", () => {
+      MenuButton.setTexture("botonMenu");
+      })
+
   }
 
   update() {}

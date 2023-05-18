@@ -101,19 +101,19 @@ export default class Game extends Phaser.Scene {
     });
 
     //agrega texto en pantalla de puntaje
-    this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0 / E: 0", {
+    this.scoreText = this.add.text(16, 16, "T: 0 / C: 0 / R: 0", {
       fontSize: "20px",
-      fill: "#1af",
+      fill: "#fffa86",
     });
 
     this.totalScoreText = this.add.text(16, 50, "SCORE: 0", {
       fontSize: "20px",
-      fill: "#1af",
+      fill: "#fffa86",
     })
 
     this.timerText = this.add.text(400, 16, "Tiempo: 30", {
       fontSize: "20px",
-      fill: "#1af",
+      fill: "#fffa86",
     });
   }
 
@@ -159,9 +159,7 @@ export default class Game extends Phaser.Scene {
         " / C: " +
         this.shapesRecolected[CUADRADO].count +
         " / R: " +
-        this.shapesRecolected[ROMBO].count +
-        " / E: " +
-        this.shapesRecolected[ESTRELLA].count
+        this.shapesRecolected[ROMBO].count
     );
 
     this.totalScoreText.setText(
